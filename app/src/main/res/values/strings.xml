@@ -1,0 +1,20 @@
+<resources>
+    <string name="app_name">AdminIICP</string>
+    <string name="sign_in">Sign In</string>
+    <string name="email">Enter your email address</string>
+    <string name="password">Enter your password</string>
+    <string name="login">Login</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="create_event">Create Event</string>
+    <string name="create_poll">Create Poll</string>
+    <string name="submit">Submit</string>
+    <string name="poll_title">Poll Title:</string>
+    <string name="option_1">Option 1:</string>
+    <string name="option_3">Option 3:</string>
+    <string name="option_2">Option 2:</string>
+    <string name="vote_end_date">Vote End Date:</string>
+    <string name="select_date">Select Date</string>
+    <string name="select_time">Select Time</string>
+    <string name="vote_end_time">Vote End Time:</string>
+</resources>
