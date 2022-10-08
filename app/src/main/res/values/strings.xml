@@ -17,4 +17,7 @@
     <string name="select_date">Select Date</string>
     <string name="select_time">Select Time</string>
     <string name="vote_end_time">Vote End Time:</string>
+    <string name="petition_title">Petition Title:</string>
+    <string name="create_petition">Create Petition</string>
+    <string name="description">Description</string>
 </resources>

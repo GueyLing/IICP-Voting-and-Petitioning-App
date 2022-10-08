@@ -117,6 +117,11 @@ public class CreatePollActivity extends AppCompatActivity implements DatePickerD
         this.hourOfDay = hourOfDay;
         this.minute = minute;
         Button time_button = (Button)findViewById(R.id.time_picker);
-        time_button.setText( hourOfDay + ":" + minute);
+        if (minute < 10){
+            time_button.setText( hourOfDay + ":0" + minute);
+        }
+        else {
+            time_button.setText(hourOfDay + ":" + minute);
+        }
     }
 }
