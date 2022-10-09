@@ -85,7 +85,7 @@ public class CreatePetitionActivity extends AppCompatActivity implements DatePic
         }else{
             PetitionEvent petitions = new PetitionEvent(petitionTitle, petition_description, month, year, dayOfMonth, hourOfDay, minute);
             petitionDbRef.child(petition_id).setValue(petitions);
-            Event petitionEvent = new Event(petition_id, petitionTitle, ServerValue.TIMESTAMP,"poll");
+            Event petitionEvent = new Event(petition_id, petitionTitle, ServerValue.TIMESTAMP,"petition");
             eventsDbRef.push().setValue(petitionEvent);
             Toast.makeText(CreatePetitionActivity.this, "Created successfully",
                     Toast.LENGTH_SHORT).show();
