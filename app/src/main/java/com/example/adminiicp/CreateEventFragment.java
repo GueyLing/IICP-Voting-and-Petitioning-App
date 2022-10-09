@@ -25,7 +25,7 @@ public class CreateEventFragment extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-    private Button button, petition_button;
+    private Button button, petition_button, election_button;
 
     public CreateEventFragment() {
         // Required empty public constructor
@@ -77,6 +77,15 @@ public class CreateEventFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getActivity(), CreatePetitionActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        election_button = rootView.findViewById(R.id.election_btn);
+        election_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), CreateElectionActivity.class);
                 startActivity(intent);
             }
         });

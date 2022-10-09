@@ -20,4 +20,6 @@
     <string name="petition_title">Petition Title:</string>
     <string name="create_petition">Create Petition</string>
     <string name="description">Description</string>
+    <string name="create_election">Create Election</string>
+    <string name="election_title">Election Title:</string>
 </resources>

@@ -18,6 +18,7 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -52,8 +53,11 @@ public class MainActivity extends AppCompatActivity {
     public void onStart() {
         super.onStart();
         // Check if user is signed in (non-null) and update UI accordingly.
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-        startActivity(new Intent(MainActivity.this, AdminHomeActivity.class));
+       // FirebaseUser currentUser = mAuth.getCurrentUser();
+
+        if (FirebaseAuth.getInstance().getCurrentUser() != null){
+            startActivity(new Intent(MainActivity.this, AdminHomeActivity.class));
+        }
     }
 
     private void loginUser(String email, String password) {
