@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ServerValue;
 
 import java.text.DateFormat;
 import java.util.Calendar;
@@ -31,8 +32,9 @@ public class CreatePetitionActivity extends AppCompatActivity implements DatePic
     int month, year, dayOfMonth, hourOfDay, minute;
     boolean selected = false;
     boolean selected_time = false;
+    String petition_id;
 
-    DatabaseReference petitionDbRef;
+    DatabaseReference petitionDbRef, eventsDbRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +48,8 @@ public class CreatePetitionActivity extends AppCompatActivity implements DatePic
         submit = findViewById(R.id.submit);
 
         petitionDbRef = FirebaseDatabase.getInstance().getReference().child("petition_event");
+        eventsDbRef = FirebaseDatabase.getInstance().getReference().child("events");
+        petition_id = petitionDbRef.push().getKey();
 
         date.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -80,7 +84,9 @@ public class CreatePetitionActivity extends AppCompatActivity implements DatePic
                     Toast.LENGTH_SHORT).show();
         }else{
             PetitionEvent petitions = new PetitionEvent(petitionTitle, petition_description, month, year, dayOfMonth, hourOfDay, minute);
-            petitionDbRef.push().setValue(petitions);
+            petitionDbRef.child(petition_id).setValue(petitions);
+            Event petitionEvent = new Event(petition_id, petitionTitle, ServerValue.TIMESTAMP,"poll");
+            eventsDbRef.push().setValue(petitionEvent);
             Toast.makeText(CreatePetitionActivity.this, "Created successfully",
                     Toast.LENGTH_SHORT).show();
             startActivity(new Intent(CreatePetitionActivity.this, AdminHomeActivity.class));

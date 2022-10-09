@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ServerValue;
 
 import java.text.DateFormat;
 import java.util.Calendar;
@@ -34,8 +35,9 @@ public class CreateElectionActivity extends AppCompatActivity implements DatePic
     int month, year, dayOfMonth, hourOfDay, minute;
     boolean selected = false;
     boolean selected_time = false;
+    String election_id;
 
-    DatabaseReference electionDbRef;
+    DatabaseReference electionDbRef, eventsDbRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +55,8 @@ public class CreateElectionActivity extends AppCompatActivity implements DatePic
         submit = findViewById(R.id.submit);
 
         electionDbRef = FirebaseDatabase.getInstance().getReference().child("election_event");
+        eventsDbRef = FirebaseDatabase.getInstance().getReference().child("events");
+        election_id = electionDbRef.push().getKey();
 
         date.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -91,7 +95,9 @@ public class CreateElectionActivity extends AppCompatActivity implements DatePic
                     Toast.LENGTH_SHORT).show();
         }else{
             ElectionEvent petitions = new ElectionEvent(electionTitle, p_candidate1, p_candidate2, vp_candidate1, vp_candidate2, month, year, dayOfMonth, hourOfDay, minute);
-            electionDbRef.push().setValue(petitions);
+            electionDbRef.child(election_id).setValue(petitions);
+            Event petitionEvent = new Event(election_id, electionTitle, ServerValue.TIMESTAMP,"election");
+            eventsDbRef.push().setValue(petitionEvent);
             Toast.makeText(CreateElectionActivity.this, "Created successfully",
                     Toast.LENGTH_SHORT).show();
             startActivity(new Intent(CreateElectionActivity.this, AdminHomeActivity.class));

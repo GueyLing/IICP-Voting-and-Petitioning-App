@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ServerValue;
 
 import java.text.DateFormat;
 import java.util.Calendar;
@@ -35,8 +36,9 @@ public class CreatePollActivity extends AppCompatActivity implements DatePickerD
     int month, year, dayOfMonth, hourOfDay, minute;
     boolean selected = false;
     boolean selected_time = false;
+    String poll_id;
 
-    DatabaseReference pollDbRef;
+    DatabaseReference pollDbRef, eventsDbRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +54,8 @@ public class CreatePollActivity extends AppCompatActivity implements DatePickerD
         submit = findViewById(R.id.submit);
 
         pollDbRef = FirebaseDatabase.getInstance().getReference().child("poll_event");
+        eventsDbRef = FirebaseDatabase.getInstance().getReference().child("events");
+        poll_id = pollDbRef.push().getKey();
 
         date.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -87,7 +91,9 @@ public class CreatePollActivity extends AppCompatActivity implements DatePickerD
                     Toast.LENGTH_SHORT).show();
         }else{
         PollEvent polls = new PollEvent(pollTitle, optionOne, optionTwo, optionThree, month, year, dayOfMonth, hourOfDay, minute);
-        pollDbRef.push().setValue(polls);
+        pollDbRef.child(poll_id).setValue(polls);
+        Event pollEvent = new Event(poll_id, pollTitle, ServerValue.TIMESTAMP,"poll");
+        eventsDbRef.push().setValue(pollEvent);
             Toast.makeText(CreatePollActivity.this, "Created successfully",
                     Toast.LENGTH_SHORT).show();
             startActivity(new Intent(CreatePollActivity.this, AdminHomeActivity.class));
