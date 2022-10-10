@@ -1,5 +1,6 @@
 package com.example.adminiicp;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -30,6 +31,7 @@ public class ViewStatisticsFragment extends Fragment {
     DatabaseReference database;
     MyAdapter myAdapter;
     ArrayList<EventTitle> list;
+    MyAdapter.RecyclerViewClickListener listener;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -84,8 +86,11 @@ public class ViewStatisticsFragment extends Fragment {
         recyclerView.setLayoutManager(linearLayoutManager);
         //recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
+
+        setOnClickListener();
         list = new ArrayList<>();
-        myAdapter = new MyAdapter(getActivity(),list);
+        //this should put line90
+        myAdapter = new MyAdapter(getActivity(),list, listener);
         recyclerView.setAdapter(myAdapter);
 
         database.addValueEventListener(new ValueEventListener() {
@@ -104,5 +109,47 @@ public class ViewStatisticsFragment extends Fragment {
             }
         });
         return rootView;
+    }
+
+    private void setOnClickListener() {
+
+        listener = new MyAdapter.RecyclerViewClickListener() {
+            @Override
+            public void onClick(View v, int position) {
+                DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("petition_event").child(list.get(position).getId());
+                if(list.get(position).getType().equals("petition")){
+                    ref.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            String petitionTitle= snapshot.child("petitionTitle").getValue().toString();
+                            String description= snapshot.child("description").getValue().toString();
+                            String petition_no= snapshot.child("petition_no").getValue().toString();
+                            methodToProcess(petitionTitle, description, petition_no);
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+                        }
+                    });
+//                    Intent intent = new Intent(getActivity(), EventDetailsActivity.class);
+//                    intent.putExtra("title", list.get(position).getId());
+//
+//                    intent.putExtra("title", group);
+//                    startActivity(intent);
+                }
+
+            }
+        };
+    }
+
+    private void methodToProcess(String petitionTitle, String description, String petition_no) {
+        Intent intent = new Intent(getActivity(), ResultPetitionActivity.class);
+//                    intent.putExtra("title", list.get(position).getId());
+
+        intent.putExtra("title", petitionTitle);
+        intent.putExtra("description", description);
+        intent.putExtra("count", petition_no);
+
+        startActivity(intent);
     }
 }
