@@ -116,8 +116,9 @@ public class ViewStatisticsFragment extends Fragment {
         listener = new MyAdapter.RecyclerViewClickListener() {
             @Override
             public void onClick(View v, int position) {
-                DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("petition_event").child(list.get(position).getId());
+
                 if(list.get(position).getType().equals("petition")){
+                    DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("petition_event").child(list.get(position).getId());
                     ref.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -131,11 +132,30 @@ public class ViewStatisticsFragment extends Fragment {
                         public void onCancelled(@NonNull DatabaseError error) {
                         }
                     });
-//                    Intent intent = new Intent(getActivity(), EventDetailsActivity.class);
-//                    intent.putExtra("title", list.get(position).getId());
-//
-//                    intent.putExtra("title", group);
-//                    startActivity(intent);
+                }
+                else if(list.get(position).getType().equals("election")){
+                    DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("election_event").child(list.get(position).getId());
+                    ref.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            String electionTitle= snapshot.child("electionTitle").getValue().toString();
+                            String president_candidate1= snapshot.child("president_candidate1").getValue().toString();
+                            String president_candidate2= snapshot.child("president_candidate2").getValue().toString();
+                            String vice_president_candidate1= snapshot.child("vice_president_candidate1").getValue().toString();
+                            String vice_president_candidate2= snapshot.child("vice_president_candidate2").getValue().toString();
+                            String p1_count= snapshot.child("p1_count").getValue().toString();
+                            String p2_count= snapshot.child("p2_count").getValue().toString();
+                            String vp1_count= snapshot.child("vp1_count").getValue().toString();
+                            String vp2_count= snapshot.child("vp2_count").getValue().toString();
+
+                            methodToProcess2(electionTitle, president_candidate1, president_candidate2,vice_president_candidate1,vice_president_candidate2,p1_count,p2_count,vp1_count, vp2_count );
+
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+                        }
+                    });
                 }
 
             }
@@ -149,6 +169,21 @@ public class ViewStatisticsFragment extends Fragment {
         intent.putExtra("title", petitionTitle);
         intent.putExtra("description", description);
         intent.putExtra("count", petition_no);
+
+        startActivity(intent);
+    }
+
+    private void methodToProcess2(String electionTitle, String president_candidate1, String president_candidate2,String vice_president_candidate1,String vice_president_candidate2,String p1_count,String p2_count,String vp1_count, String vp2_count) {
+        Intent intent = new Intent(getActivity(), ResultElectionActivity.class);
+        intent.putExtra("title", electionTitle);
+        intent.putExtra("president_candidate1", president_candidate1);
+        intent.putExtra("president_candidate2", president_candidate2);
+        intent.putExtra("vice_president_candidate1", vice_president_candidate1);
+        intent.putExtra("vice_president_candidate2", vice_president_candidate2);
+        intent.putExtra("p1_count", p1_count);
+        intent.putExtra("p2_count", p2_count);
+        intent.putExtra("vp1_count", vp1_count);
+        intent.putExtra("vp2_count", vp2_count);
 
         startActivity(intent);
     }
