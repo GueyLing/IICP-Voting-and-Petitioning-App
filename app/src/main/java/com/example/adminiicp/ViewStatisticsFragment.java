@@ -157,10 +157,46 @@ public class ViewStatisticsFragment extends Fragment {
                         }
                     });
                 }
+                else {
+                    DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("poll_event").child(list.get(position).getId());
+                    ref.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                            String pollTitle= snapshot.child("pollTitle").getValue().toString();
+                            String option1= snapshot.child("option1").getValue().toString();
+                            String option2= snapshot.child("option2").getValue().toString();
+                            String option3= snapshot.child("option3").getValue().toString();
+                            String option1_count= snapshot.child("option1_count").getValue().toString();
+                            String option2_count= snapshot.child("option2_count").getValue().toString();
+                            String option3_count= snapshot.child("option3_count").getValue().toString();
+
+                            methodToProcess3(pollTitle, option1, option2, option3, option1_count,option2_count,option3_count);
+
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError error) {
+                        }
+                    });
+                }
 
             }
         };
     }
+
+    private void methodToProcess3(String pollTitle, String option1, String option2, String option3, String option1_count, String option2_count, String option3_count) {
+        Intent intent = new Intent(getActivity(), ResultPollActivity.class);
+        intent.putExtra("title", pollTitle);
+        intent.putExtra("option1", option1);
+        intent.putExtra("option2", option2);
+        intent.putExtra("option3", option3);
+        intent.putExtra("option1_count", option1_count);
+        intent.putExtra("option2_count", option2_count);
+        intent.putExtra("option3_count", option3_count);
+
+        startActivity(intent);
+    }
+
 
     private void methodToProcess(String petitionTitle, String description, String petition_no) {
         Intent intent = new Intent(getActivity(), ResultPetitionActivity.class);
