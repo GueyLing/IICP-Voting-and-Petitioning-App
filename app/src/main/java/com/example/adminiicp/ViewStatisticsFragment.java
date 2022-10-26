@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -32,6 +33,7 @@ public class ViewStatisticsFragment extends Fragment {
     MyAdapter myAdapter;
     ArrayList<EventTitle> list;
     MyAdapter.RecyclerViewClickListener listener;
+    ShimmerFrameLayout shimmerFrameLayout;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -78,6 +80,8 @@ public class ViewStatisticsFragment extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_view_statistics, container, false);
         recyclerView = rootView.findViewById(R.id.eventList);
+        shimmerFrameLayout = rootView.findViewById(R.id.shimmer);
+        shimmerFrameLayout.startShimmer();
         database = FirebaseDatabase.getInstance().getReference("events");
         recyclerView.setHasFixedSize(true);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
@@ -100,6 +104,9 @@ public class ViewStatisticsFragment extends Fragment {
                     EventTitle event = dataSnapshot.getValue(EventTitle.class);
                     list.add(event);
                 }
+                shimmerFrameLayout.stopShimmer();
+                shimmerFrameLayout.setVisibility(View.GONE);
+                recyclerView.setVisibility(View.VISIBLE);
                 myAdapter.notifyDataSetChanged();
             }
 
