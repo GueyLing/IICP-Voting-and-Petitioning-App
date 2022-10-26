@@ -9,6 +9,7 @@ import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
+import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.utils.ColorTemplate;
 
 import java.util.ArrayList;
@@ -49,6 +50,12 @@ public class ResultPollActivity extends AppCompatActivity {
         pieChart.setDrawEntryLabels(false);
         pieChart.getDescription().setEnabled(false);
         pieData.setValueTextSize(12f);
+        pieData.setValueFormatter(new ValueFormatter() {
+            @Override
+            public String getFormattedValue(float value) {
+                return String.valueOf((int) Math.floor(value));
+            }
+        });
         pieChart.setData(pieData);
         pieChart.setDrawHoleEnabled(false);
         pieChart.setRotationEnabled(false);

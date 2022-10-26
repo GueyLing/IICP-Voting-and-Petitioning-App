@@ -7,4 +7,7 @@
     <item android:title="View Statistics"
         android:icon="@drawable/ic_baseline_poll_24"
         android:id="@+id/statistic_icon"/>
+    <item android:title="Profile"
+        android:icon="@drawable/ic_baseline_person_24"
+        android:id="@+id/profile"/>
 </menu>

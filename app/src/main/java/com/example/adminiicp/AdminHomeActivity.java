@@ -29,11 +29,12 @@ public class AdminHomeActivity extends AppCompatActivity {
             switch (item.getItemId()){
                 case R.id.vote_icon:
                     replaceFragment(new CreateEventFragment());
-                    Log.d("finder","1");
                     break;
                 case R.id.statistic_icon:
                     replaceFragment(new ViewStatisticsFragment());
-                    Log.d("finder","2");
+                    break;
+                case R.id.profile:
+                    replaceFragment(new ProfileFragment());
                     break;
             }
             return true;
