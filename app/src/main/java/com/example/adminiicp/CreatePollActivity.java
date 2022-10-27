@@ -1,5 +1,6 @@
 package com.example.adminiicp;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
 
@@ -17,9 +18,12 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ServerValue;
+import com.google.firebase.database.ValueEventListener;
 
 import java.text.DateFormat;
 import java.util.Calendar;
@@ -38,7 +42,7 @@ public class CreatePollActivity extends AppCompatActivity implements DatePickerD
     boolean selected_time = false;
     String poll_id;
 
-    DatabaseReference pollDbRef, eventsDbRef;
+    DatabaseReference pollDbRef, eventsDbRef, database;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +60,7 @@ public class CreatePollActivity extends AppCompatActivity implements DatePickerD
         pollDbRef = FirebaseDatabase.getInstance().getReference().child("poll_event");
         eventsDbRef = FirebaseDatabase.getInstance().getReference().child("events");
         poll_id = pollDbRef.push().getKey();
+        database = FirebaseDatabase.getInstance().getReference("user_events");
 
         date.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -90,9 +95,22 @@ public class CreatePollActivity extends AppCompatActivity implements DatePickerD
             Toast.makeText(CreatePollActivity.this, "Please enter all fields",
                     Toast.LENGTH_SHORT).show();
         }else{
+            database.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    for (DataSnapshot dataSnapshot: snapshot.getChildren()){
+                        dataSnapshot.child(poll_id).getRef().setValue(false);
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
         PollEvent polls = new PollEvent(pollTitle, optionOne, optionTwo, optionThree, month, year, dayOfMonth, hourOfDay, minute);
         pollDbRef.child(poll_id).setValue(polls);
-        Event pollEvent = new Event(poll_id, pollTitle, ServerValue.TIMESTAMP,"poll");
+        Event pollEvent = new Event(poll_id, pollTitle, ServerValue.TIMESTAMP,"poll", month, year, dayOfMonth, hourOfDay, minute);
         eventsDbRef.push().setValue(pollEvent);
             Toast.makeText(CreatePollActivity.this, "Created successfully",
                     Toast.LENGTH_SHORT).show();

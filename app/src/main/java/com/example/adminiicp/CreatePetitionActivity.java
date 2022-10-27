@@ -1,5 +1,6 @@
 package com.example.adminiicp;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
 
@@ -15,9 +16,12 @@ import android.widget.EditText;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ServerValue;
+import com.google.firebase.database.ValueEventListener;
 
 import java.text.DateFormat;
 import java.util.Calendar;
@@ -34,7 +38,7 @@ public class CreatePetitionActivity extends AppCompatActivity implements DatePic
     boolean selected_time = false;
     String petition_id;
 
-    DatabaseReference petitionDbRef, eventsDbRef;
+    DatabaseReference petitionDbRef, eventsDbRef, database;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +54,7 @@ public class CreatePetitionActivity extends AppCompatActivity implements DatePic
         petitionDbRef = FirebaseDatabase.getInstance().getReference().child("petition_event");
         eventsDbRef = FirebaseDatabase.getInstance().getReference().child("events");
         petition_id = petitionDbRef.push().getKey();
+        database = FirebaseDatabase.getInstance().getReference("user_events");
 
         date.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -83,9 +88,22 @@ public class CreatePetitionActivity extends AppCompatActivity implements DatePic
             Toast.makeText(CreatePetitionActivity.this, "Please enter all fields",
                     Toast.LENGTH_SHORT).show();
         }else{
+            database.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    for (DataSnapshot dataSnapshot: snapshot.getChildren()){
+                        dataSnapshot.child(petition_id).getRef().setValue(false);
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
             PetitionEvent petitions = new PetitionEvent(petitionTitle, petition_description, month, year, dayOfMonth, hourOfDay, minute);
             petitionDbRef.child(petition_id).setValue(petitions);
-            Event petitionEvent = new Event(petition_id, petitionTitle, ServerValue.TIMESTAMP,"petition");
+            Event petitionEvent = new Event(petition_id, petitionTitle, ServerValue.TIMESTAMP,"petition", month, year, dayOfMonth, hourOfDay, minute);
             eventsDbRef.push().setValue(petitionEvent);
             Toast.makeText(CreatePetitionActivity.this, "Created successfully",
                     Toast.LENGTH_SHORT).show();

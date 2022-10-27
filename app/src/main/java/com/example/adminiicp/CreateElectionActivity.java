@@ -1,5 +1,6 @@
 package com.example.adminiicp;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
 
@@ -8,6 +9,7 @@ import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -15,9 +17,12 @@ import android.widget.EditText;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ServerValue;
+import com.google.firebase.database.ValueEventListener;
 
 import java.text.DateFormat;
 import java.util.Calendar;
@@ -37,7 +42,7 @@ public class CreateElectionActivity extends AppCompatActivity implements DatePic
     boolean selected_time = false;
     String election_id;
 
-    DatabaseReference electionDbRef, eventsDbRef;
+    DatabaseReference electionDbRef, eventsDbRef, database;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +62,7 @@ public class CreateElectionActivity extends AppCompatActivity implements DatePic
         electionDbRef = FirebaseDatabase.getInstance().getReference().child("election_event");
         eventsDbRef = FirebaseDatabase.getInstance().getReference().child("events");
         election_id = electionDbRef.push().getKey();
+        database = FirebaseDatabase.getInstance().getReference("user_events");
 
         date.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -94,9 +100,22 @@ public class CreateElectionActivity extends AppCompatActivity implements DatePic
             Toast.makeText(CreateElectionActivity.this, "Please enter all fields",
                     Toast.LENGTH_SHORT).show();
         }else{
+            database.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    for (DataSnapshot dataSnapshot: snapshot.getChildren()){
+                        dataSnapshot.child(election_id).getRef().setValue(false);
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
             ElectionEvent petitions = new ElectionEvent(electionTitle, p_candidate1, p_candidate2, vp_candidate1, vp_candidate2, month, year, dayOfMonth, hourOfDay, minute);
             electionDbRef.child(election_id).setValue(petitions);
-            Event petitionEvent = new Event(election_id, electionTitle, ServerValue.TIMESTAMP,"election");
+            Event petitionEvent = new Event(election_id, electionTitle, ServerValue.TIMESTAMP,"election", month, year, dayOfMonth, hourOfDay, minute);
             eventsDbRef.push().setValue(petitionEvent);
             Toast.makeText(CreateElectionActivity.this, "Created successfully",
                     Toast.LENGTH_SHORT).show();
