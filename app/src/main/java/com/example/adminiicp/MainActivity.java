@@ -22,6 +22,7 @@ import com.google.firebase.database.FirebaseDatabase;
 
 public class MainActivity extends AppCompatActivity {
 
+    // Log in
     private EditText email;
     private EditText password;
     private Button login;
