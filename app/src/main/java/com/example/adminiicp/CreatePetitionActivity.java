@@ -9,6 +9,7 @@ import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -88,6 +89,7 @@ public class CreatePetitionActivity extends AppCompatActivity implements DatePic
             Toast.makeText(CreatePetitionActivity.this, "Please enter all fields",
                     Toast.LENGTH_SHORT).show();
         }else{
+
             database.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -101,9 +103,9 @@ public class CreatePetitionActivity extends AppCompatActivity implements DatePic
 
                 }
             });
-            PetitionEvent petitions = new PetitionEvent(petitionTitle, petition_description, month, year, dayOfMonth, hourOfDay, minute);
+            PetitionEvent petitions = new PetitionEvent(petitionTitle, petition_description, month+1, year, dayOfMonth, hourOfDay, minute);
             petitionDbRef.child(petition_id).setValue(petitions);
-            Event petitionEvent = new Event(petition_id, petitionTitle, ServerValue.TIMESTAMP,"petition", month, year, dayOfMonth, hourOfDay, minute);
+            Event petitionEvent = new Event(petition_id, petitionTitle, ServerValue.TIMESTAMP,"petition", month+1, year, dayOfMonth, hourOfDay, minute);
             eventsDbRef.push().setValue(petitionEvent);
             Toast.makeText(CreatePetitionActivity.this, "Created successfully",
                     Toast.LENGTH_SHORT).show();

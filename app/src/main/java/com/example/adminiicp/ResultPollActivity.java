@@ -67,11 +67,11 @@ public class ResultPollActivity extends AppCompatActivity {
         int value2 = Integer.parseInt(option2_count);
         int value3 = Integer.parseInt(option3_count);
 
-        if (value1 >0)
-        pieEntryList.add(new PieEntry(value1, option1));
-        if (value2 >0)
-        pieEntryList.add(new PieEntry(value2, option2));
-        if (value3 >0)
-        pieEntryList.add(new PieEntry(value3, option3));
+        if (value1 >0){
+        pieEntryList.add(new PieEntry(value1, option1));}
+        if (value2 >0){
+        pieEntryList.add(new PieEntry(value2, option2));}
+        if (value3 >0){
+        pieEntryList.add(new PieEntry(value3, option3));}
     }
 }

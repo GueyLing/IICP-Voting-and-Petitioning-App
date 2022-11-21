@@ -207,8 +207,6 @@ public class ViewStatisticsFragment extends Fragment {
 
     private void methodToProcess(String petitionTitle, String description, String petition_no) {
         Intent intent = new Intent(getActivity(), ResultPetitionActivity.class);
-//                    intent.putExtra("title", list.get(position).getId());
-
         intent.putExtra("title", petitionTitle);
         intent.putExtra("description", description);
         intent.putExtra("count", petition_no);

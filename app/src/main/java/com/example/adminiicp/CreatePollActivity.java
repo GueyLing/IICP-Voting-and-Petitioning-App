@@ -108,9 +108,9 @@ public class CreatePollActivity extends AppCompatActivity implements DatePickerD
 
                 }
             });
-        PollEvent polls = new PollEvent(pollTitle, optionOne, optionTwo, optionThree, month, year, dayOfMonth, hourOfDay, minute);
+        PollEvent polls = new PollEvent(pollTitle, optionOne, optionTwo, optionThree, month+1, year, dayOfMonth, hourOfDay, minute);
         pollDbRef.child(poll_id).setValue(polls);
-        Event pollEvent = new Event(poll_id, pollTitle, ServerValue.TIMESTAMP,"poll", month, year, dayOfMonth, hourOfDay, minute);
+        Event pollEvent = new Event(poll_id, pollTitle, ServerValue.TIMESTAMP,"poll", month+1, year, dayOfMonth, hourOfDay, minute);
         eventsDbRef.push().setValue(pollEvent);
             Toast.makeText(CreatePollActivity.this, "Created successfully",
                     Toast.LENGTH_SHORT).show();

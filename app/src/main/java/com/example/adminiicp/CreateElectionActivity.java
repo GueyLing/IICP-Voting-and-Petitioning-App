@@ -113,9 +113,9 @@ public class CreateElectionActivity extends AppCompatActivity implements DatePic
 
                 }
             });
-            ElectionEvent petitions = new ElectionEvent(electionTitle, p_candidate1, p_candidate2, vp_candidate1, vp_candidate2, month, year, dayOfMonth, hourOfDay, minute);
+            ElectionEvent petitions = new ElectionEvent(electionTitle, p_candidate1, p_candidate2, vp_candidate1, vp_candidate2, month+1, year, dayOfMonth, hourOfDay, minute);
             electionDbRef.child(election_id).setValue(petitions);
-            Event petitionEvent = new Event(election_id, electionTitle, ServerValue.TIMESTAMP,"election", month, year, dayOfMonth, hourOfDay, minute);
+            Event petitionEvent = new Event(election_id, electionTitle, ServerValue.TIMESTAMP,"election", month+1, year, dayOfMonth, hourOfDay, minute);
             eventsDbRef.push().setValue(petitionEvent);
             Toast.makeText(CreateElectionActivity.this, "Created successfully",
                     Toast.LENGTH_SHORT).show();
